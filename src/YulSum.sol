@@ -40,7 +40,9 @@ contract YulSum {
                 } {
                     result := add(result, mload(i))
                     i := add(i, 0x20)
-                    if eq(i, end) {
+                    // sometimes this might be cheaper than eq(i, end)
+                    // not always tho
+                    if iszero(lt(i, end)) {
                         break
                     }
                 }
