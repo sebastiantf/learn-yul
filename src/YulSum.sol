@@ -5,15 +5,20 @@ contract YulSum {
     function sum(uint256[] memory a) public pure returns (uint256 result) {
         assembly {
             let n := mload(a) // `a` will have the length of the array
+            // calculate slot of the last element already
+            let end := add(add(a, 0x20), mul(n, 0x20))
             for {
-                let i := 0 // for loop init var
+                // i should now be slot of the first element: add(a, 0x20)
+                let i := add(a, 0x20) // for loop init var
                 // condition
                 // solidity compiler will add iszero in the bytecode if its not already there - causing increased usage - lt(i, n)
                 // solidity compiler will remove iszero from the bytecode if its already there - causing reduced usage - iszero(eq(i, n))
-            } iszero(eq(i, n)) {
-                i := add(i, 1) // step
+                // i should be checked against end now
+            } iszero(eq(i, end)) {
+                // i should be incremented by 32 bytes : one slot now
+                i := add(i, 0x20) // step
             } {
-                result := add(result, mload(add(add(a, 0x20), mul(i, 0x20))))
+                result := add(result, mload(i)) // i is the slot of each element. so mload directly from i
             }
         }
     }
