@@ -1,3 +1,4 @@
-MaskingTest:testGetSender() (gas: 7569)
+MaskingTest:testGetSender() (gas: 7547)
+MaskingTest:testGetSenderYulCorrect() (gas: 7570)
 MaskingTest:testGetSenderYulWrong() (gas: 10322)
 YulSumTest:testSum() (gas: 6494)
