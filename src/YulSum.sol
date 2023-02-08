@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 contract YulSum {
-    function sum(uint256[] memory a) public pure returns (uint256 result) {
+    /* function sum(uint256[] memory a) public pure returns (uint256 result) {
         assembly {
             let n := mload(a) // `a` will have the length of the array
             // calculate slot of the last element already
@@ -23,6 +23,28 @@ contract YulSum {
                 i := add(i, 0x20) // step
             } {
                 result := add(result, mload(i)) // i is the slot of each element. so mload directly from i
+            }
+        }
+    } */
+
+    function sum(uint256[] memory a) public pure returns (uint256 result) {
+        assembly {
+            let n := mload(a)
+            if n {
+                let end := add(add(a, 0x20), shl(5, n))
+                // converted into an infinite loop with break
+                let i := add(a, 0x20)
+                for {
+
+                } 1 {
+
+                } {
+                    result := add(result, mload(i))
+                    i := add(i, 0x20)
+                    if eq(i, end) {
+                        break
+                    }
+                }
             }
         }
     }
