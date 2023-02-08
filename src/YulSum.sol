@@ -8,7 +8,9 @@ contract YulSum {
             for {
                 let i := 0 // for loop init var
                 // condition
-            } lt(i, n) {
+                // solidity compiler will add iszero in the bytecode if its not already there - causing increased usage - lt(i, n)
+                // solidity compiler will remove iszero from the bytecode if its already there - causing reduced usage - iszero(eq(i, n))
+            } iszero(eq(i, n)) {
                 i := add(i, 1) // step
             } {
                 result := add(result, mload(add(add(a, 0x20), mul(i, 0x20))))
