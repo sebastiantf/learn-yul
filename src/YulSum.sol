@@ -27,18 +27,21 @@ contract YulSum {
         }
     } */
 
-    function sum(uint256[] memory a) public pure returns (uint256 result) {
+    function sum(uint256[] calldata a) public pure returns (uint256 result) {
+        // in memory first element of array is the length of the array
+        // in calldata first element is the first element
+        // For dynamic calldata arrays, you can access their calldata offset (in bytes) and length (number of elements) using x.offset and x.length
         assembly {
-            if mload(a) {
-                let end := add(add(a, 0x20), shl(5, mload(a)))
+            if a.length {
+                let end := add(a.offset, shl(5, a.length))
                 // converted into an infinite loop with break
-                let i := add(a, 0x20)
+                let i := a.offset
                 for {
 
                 } 1 {
 
                 } {
-                    result := add(result, mload(i))
+                    result := add(result, calldataload(i))
                     i := add(i, 0x20)
                     // sometimes this might be cheaper than eq(i, end)
                     // not always tho
