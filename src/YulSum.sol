@@ -6,7 +6,11 @@ contract YulSum {
         assembly {
             let n := mload(a) // `a` will have the length of the array
             // calculate slot of the last element already
-            let end := add(add(a, 0x20), mul(n, 0x20))
+            // multiplication is equivalent to left shift
+            // multiplication by 32 is equivalent to left shift by 5: 2^5 = 32
+            // mul(n, 0x20) = shl(5, n)
+            // mul consumes 5 min gas : shl consumes 3 min gas
+            let end := add(add(a, 0x20), shl(5, n))
             for {
                 // i should now be slot of the first element: add(a, 0x20)
                 let i := add(a, 0x20) // for loop init var
