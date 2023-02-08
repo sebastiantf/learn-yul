@@ -14,4 +14,9 @@ contract MaskingTest is Test {
     function testGetSender() public {
         assertTrue(masking.getSender());
     }
+
+    function testGetSenderYulWrong() public {
+        vm.expectRevert();
+        masking.getSenderYulWrong();
+    }
 }

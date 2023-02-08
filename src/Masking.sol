@@ -17,4 +17,12 @@ contract Masking {
         result = _sender == msg.sender;
         require(result);
     }
+
+    function getSenderYulWrong() public view returns (bool result) {
+        address _sender = address(uint160(sender));
+        assembly {
+            result := eq(_sender, caller())
+        }
+        require(result);
+    }
 }
