@@ -73,4 +73,22 @@ contract Masking {
         }
         require(result);
     }
+
+    function getSenderYulCorrectMaskCallerShift()
+        public
+        view
+        returns (bool result)
+    {
+        address _sender = address(uint160(sender));
+        assembly {
+            _sender := and(0xffffffffffffffffffffffffffffffffffffffff, _sender)
+            result := eq(
+                _sender,
+                // we try to replace the mask with the prev shifting
+                // this seem to be using bit more gas than above tho
+                shr(96, shl(96, caller()))
+            )
+        }
+        require(result);
+    }
 }
