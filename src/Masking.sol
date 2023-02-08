@@ -14,6 +14,7 @@ contract Masking {
     function getSender() public view returns (bool result) {
         // trim and cast sender into an address
         address _sender = address(uint160(sender));
-        return _sender == msg.sender;
+        result = _sender == msg.sender;
+        require(result);
     }
 }
