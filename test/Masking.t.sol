@@ -23,4 +23,8 @@ contract MaskingTest is Test {
     function testGetSenderYulCorrect() public {
         assertTrue(masking.getSenderYulCorrect());
     }
+
+    function testGetSenderYulCorrectMask() public {
+        assertTrue(masking.getSenderYulCorrectMask());
+    }
 }

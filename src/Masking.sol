@@ -50,4 +50,14 @@ contract Masking {
         }
         require(result);
     }
+
+    function getSenderYulCorrectMask() public view returns (bool result) {
+        address _sender = address(uint160(sender));
+        assembly {
+            // so we could replace this with the bit mask
+            _sender := and(0xffffffffffffffffffffffffffffffffffffffff, _sender)
+            result := eq(_sender, caller())
+        }
+        require(result);
+    }
 }
