@@ -60,4 +60,17 @@ contract Masking {
         }
         require(result);
     }
+
+    function getSenderYulCorrectMaskCaller() public view returns (bool result) {
+        address _sender = address(uint160(sender));
+        assembly {
+            _sender := and(0xffffffffffffffffffffffffffffffffffffffff, _sender)
+            result := eq(
+                _sender,
+                // we could also mask the caller here which results in saving some gas too
+                and(0xffffffffffffffffffffffffffffffffffffffff, caller())
+            )
+        }
+        require(result);
+    }
 }
