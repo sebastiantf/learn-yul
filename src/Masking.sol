@@ -11,9 +11,16 @@ contract Masking {
     // and we OR the uint256 casted address into these freed bits
     uint256 sender = (block.timestamp << 160) | uint256(uint160(msg.sender));
 
+    // msg.sender will be 0x7fa9385be102ac3eac297483dd6233d62b3e1496
+    // block.timestamp will be 1
+
     function getSender() public view returns (bool result) {
         // trim and cast sender into an address
         address _sender = address(uint160(sender));
+        // solidity cleans the upper 96 bits during this equality check by ANDing with a bit mask if you look in the bytecode
+        // 00 00 00 00 00 00 00 00 00 00 00 01 7f a9 38 5b e1 02 ac 3e ac 29 74 83 dd 62 33 d6 2b 3e 14 96                                                                            │
+        // 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+        // result = 00 00 00 00 00 00 00 00 00 00 00 00 7f a9 38 5b e1 02 ac 3e ac 29 74 83 dd 62 33 d6 2b 3e 14 96 = 0x7fa9385be102ac3eac297483dd6233d62b3e1496
         result = _sender == msg.sender;
         require(result);
     }
@@ -21,6 +28,8 @@ contract Masking {
     function getSenderYulWrong() public view returns (bool result) {
         address _sender = address(uint160(sender));
         assembly {
+            // when doing the equality check in Yul, the upper 96 bits are not cleaned
+            // result = 00 00 00 00 00 00 00 00 00 00 00 01 7f a9 38 5b e1 02 ac 3e ac 29 74 83 dd 62 33 d6 2b 3e 14 96
             result := eq(_sender, caller())
         }
         require(result);
