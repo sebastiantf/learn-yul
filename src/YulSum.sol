@@ -29,9 +29,8 @@ contract YulSum {
 
     function sum(uint256[] memory a) public pure returns (uint256 result) {
         assembly {
-            let n := mload(a)
-            if n {
-                let end := add(add(a, 0x20), shl(5, n))
+            if mload(a) {
+                let end := add(add(a, 0x20), shl(5, mload(a)))
                 // converted into an infinite loop with break
                 let i := add(a, 0x20)
                 for {
